@@ -5,7 +5,7 @@
 #include "Motor.h"
 #include "Display.h"
 #include "Calibrator.h"
-#include "SkarstaKeypad/SkarstaKeypad.h" // Updated include path to match new directory name
+#include "SkarstaKeypad/SkarstaKeypad.h" // Corrected include path
 #include "Watchdog.h"
 
 #ifdef __H_BRIDGE_MOTOR__
