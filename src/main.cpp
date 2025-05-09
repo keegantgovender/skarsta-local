@@ -1,18 +1,24 @@
 #include <vector>
 #include <Arduino.h>
-#include <Display.h>
-#include <Calibrator.h>
-#include <Keypad.h>
-#include <configuration.h>
-#include <Watchdog.h>
+#include "configuration.h"
+#include "Service.h"
+#include "Motor.h"
+#include "Display.h"
+#include "Calibrator.h"
+#include "SkarstaKeypad.h"
+#include "Watchdog.h"
 
 #ifdef __H_BRIDGE_MOTOR__
-#include <MotorBridge.h>
+#include "MotorBridge.h"
 #else
-#include <MotorRelay.h>
+#include "MotorRelay.h"
 #endif
 #if defined(__SERIAL_COM__) || defined(__SERIAL_COM_HW__)
-#include <SerialCom.h>
+#include "SerialCom.h"
+#endif
+
+#ifdef __EEPROM__
+#include <EEPROM.h>
 #endif
 
 #ifdef __EEPROM__
@@ -44,7 +50,12 @@ MotorRelay motor(SENSOR_PIN0, SENSOR_PIN1, POWER_RELAY, DIRECTION_RELAY, STOP_PO
 Display display(DISPLAY_PIN_CLK, DISPLAY_PIN_DIO, FADE_TIMEOUT);
 Watchdog watchdog(&motor, WATCHDOG_TIMEOUT, WATCHDOG_DEADLOCK_CHANGE, WATCHDOG_OTHER_CHANGE, WATCHDOG_OTHER_SLEEP);
 Calibrator calibrator(&motor);
-Keypad keypad(&motor, &display, &calibrator, BUTTON_DOWN, BUTTON_UP, BUTTON_RST, BUTTON_P0, BUTTON_P1, BUTTON_P2);
+
+// Define row and column pins for the 4x4 keypad
+const byte rowPins[4] = {ROW1_PIN, ROW2_PIN, ROW3_PIN, ROW4_PIN};
+const byte colPins[4] = {COL1_PIN, COL2_PIN, COL3_PIN, COL4_PIN};
+SkarstaKeypad keypad(&motor, &display, &calibrator, rowPins, colPins); // Changed from Keypad to SkarstaKeypad
+
 #if defined(__SERIAL_COM__) || defined(__SERIAL_COM_HW__)
 SerialCom serialCom(&motor, &calibrator, SERIAL_COM_BAUD, SERIAL_COM_RX, SERIAL_COM_TX);
 #endif
@@ -55,9 +66,7 @@ std::vector<Service *> services = {
         &keypad,
         &motor,
         &display,
-#if defined(__SERIAL_COM__) || defined(__SERIAL_COM_HW__)
-        &serialCom
-#endif
+        // Removed &serialCom since __SERIAL_COM__ and __SERIAL_COM_HW__ are not defined
 };
 
 #ifdef __WATCHDOG__
@@ -78,17 +87,26 @@ void setup() {
     watchdog.add_trigger(&runawayTrigger);
 #endif
     bool failed = false;
-    for (const auto &service: services)
-        failed |= !service->begin();
+    for (const auto &service : services) {
+        bool result = service->begin();
+        if (!result) {
+            LOG("Service failed to initialize");
+        }
+        failed |= !result;
+    }
 
     if (failed) {
-        for (const auto &service: services)
+        LOG("Initialization failed, disabling services with cause: ");
+        LOG(INIT);
+        for (const auto &service : services)
             service->disable(INIT);
+    } else {
+        LOG("All services initialized successfully");
     }
     LOG("started");
 }
 
 void loop() {
-    for (const auto &service: services)
+    for (const auto &service : services)
         service->cycle();
 }
