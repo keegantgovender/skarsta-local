@@ -5,7 +5,7 @@
 #include "Motor.h"
 #include "Display.h"
 #include "Calibrator.h"
-#include "SkarstaKeypad.h"
+#include "SkarstaKeypad/SkarstaKeypad.h" // Updated include path to match new directory name
 #include "Watchdog.h"
 
 #ifdef __H_BRIDGE_MOTOR__
@@ -54,7 +54,7 @@ Calibrator calibrator(&motor);
 // Define row and column pins for the 4x4 keypad
 const byte rowPins[4] = {ROW1_PIN, ROW2_PIN, ROW3_PIN, ROW4_PIN};
 const byte colPins[4] = {COL1_PIN, COL2_PIN, COL3_PIN, COL4_PIN};
-SkarstaKeypad keypad(&motor, &display, &calibrator, rowPins, colPins); // Changed from Keypad to SkarstaKeypad
+SkarstaKeypad keypad(&motor, &display, &calibrator, rowPins, colPins);
 
 #if defined(__SERIAL_COM__) || defined(__SERIAL_COM_HW__)
 SerialCom serialCom(&motor, &calibrator, SERIAL_COM_BAUD, SERIAL_COM_RX, SERIAL_COM_TX);
@@ -66,7 +66,6 @@ std::vector<Service *> services = {
         &keypad,
         &motor,
         &display,
-        // Removed &serialCom since __SERIAL_COM__ and __SERIAL_COM_HW__ are not defined
 };
 
 #ifdef __WATCHDOG__
