@@ -1,7 +1,7 @@
 #pragma once
 
-#include "configuration.h" // Simplified path
-#include "Service.h"
+#include "config/configuration.h"
+#include "service/Service.h" // Explicit path
 #include "Motor.h"
 
 #define END_STOP_OFFSET 100

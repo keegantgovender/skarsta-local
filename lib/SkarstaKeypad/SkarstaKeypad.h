@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Service.h>
-#include <Motor.h>
-#include <Display.h>
-#include <NIButtons.h>
-#include <Calibrator.h>
+#include "service/Service.h" // Explicit path
+#include "Motor.h"
+#include "Display.h"
+#include "Keypad.h"
+#include "Calibrator.h"
 
 #ifdef __EEPROM__
 #include <EEPROM.h>
@@ -14,17 +14,30 @@
 #define SAVE_BUTTON_TIMEOUT 1500
 #define RST_BUTTON_TIMEOUT 1500
 
-class Keypad : public Service {
+class SkarstaKeypad : public Service {
 private:
-    NIButton down, up, rst, preset_0, preset_1, preset_2;
-    NIButton *preset_buttons[3], *buttons[6];
+    Keypad keypad;
+    Motor* motor = nullptr;
+    Display* display = nullptr;
+    Calibrator* calibrator = nullptr;
+    char lastKey = NO_KEY;
+    bool downPressed = false;
+    bool upPressed = false;
+    bool preset0Pressed = false;
+    bool preset1Pressed = false;
+    bool preset2Pressed = false;
+    bool resetPressed = false;
+    unsigned long resetPressStart = 0;
+    unsigned long preset0PressStart = 0;
+    unsigned long preset1PressStart = 0;
+    unsigned long preset2PressStart = 0;
+
 protected:
     bool stop_motor();
 
 public:
-    Keypad(Motor *_motor, Display *_display, Calibrator *_calibrator,
-           uint8_t down_pin, uint8_t up_pin, uint8_t rst_pin,
-           uint8_t preset_0_pin, uint8_t preset_1_pin, uint8_t preset_2_pin);
+    SkarstaKeypad(Motor* _motor, Display* _display, Calibrator* _calibrator,
+                  const byte* rowPins, const byte* colPins);
 
     bool begin() override;
 

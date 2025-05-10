@@ -1,10 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "Service.h"
+#include "service/Service.h" // Explicit path
 #include "Motor.h"
 #include "Display.h"
-#include "configuration.h" // Simplified path
+#include "configuration.h"
 
 class SafetyTrigger : public Trigger {
 private:

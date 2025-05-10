@@ -1,14 +1,14 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Service.h>
+#include "service/Service.h" // Explicit path
 #include <TM1637.h>
 
 class Display : public TimedService {
 private:
     TM1637 display;
     uint8_t brightness = BRIGHT_HIGH;
-    int8_t disp_buffer[4] = {0x00, 0x00, 0x00, 0x00};
+    uint8_t disp_buffer[4] = {0x00, 0x00, 0x00, 0x00};
     bool dirty = false, blink = false, clear = false, disabled = false;
 
     const uint16_t timeout;
