@@ -1,11 +1,11 @@
 #include <vector>
 #include <Arduino.h>
-#include "configuration.h" // Simplified path
+#include "configuration.h"
 #include "Service.h"
 #include "Motor.h"
 #include "Display.h"
 #include "Calibrator.h"
-#include "SkarstaKeypad/SkarstaKeypad.h"
+#include "SkarstaKeypad.h" // Simplified include path
 #include "Watchdog.h"
 
 #ifdef __H_BRIDGE_MOTOR__
