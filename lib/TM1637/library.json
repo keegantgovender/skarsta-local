@@ -1,0 +1,14 @@
+{
+    "name": "TM1637",
+    "version": "1.0.0",
+    "description": "TM1637 library for the Skarsta project",
+    "keywords": "tm1637, display, skarsta",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your-email@example.com"
+        }
+    ],
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}
