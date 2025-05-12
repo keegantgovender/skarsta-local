@@ -1,0 +1,14 @@
+{
+    "name": "Service",
+    "version": "1.0.0",
+    "description": "Service library for the Skarsta project",
+    "keywords": "service, skarsta",
+    "authors": [
+        {
+            "name": "Your Name",
+            "email": "your-email@example.com"
+        }
+    ],
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}
