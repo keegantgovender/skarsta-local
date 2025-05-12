@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Arduino.h>
-#include "service/Service.h" // Explicit path
-#include <TM1637.h>
+#include "Service.h" // Simplified path
+#include "TM1637.h"
 
 class Display : public TimedService {
 private:
